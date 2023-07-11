@@ -75,7 +75,7 @@ def inject_dll(pid, dll_path):
     else:
         print("[*] Success to create remote thread in the target process.")
 
-    print(f"[*] Successfully injected '{dll_path}' into '{target_process_name}'")
+    print(f"[*] Successfully injected '{dll_path}' into '{pid}'")
     return True
     
 if __name__ == "__main__":
