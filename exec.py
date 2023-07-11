@@ -79,10 +79,6 @@ def inject_dll(pid, dll_path):
     return True
     
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python dll_injector.py <target_process_name> <dll_path>")
-        sys.exit()
-
     pid = sys.argv[1]
     dll_path = sys.argv[2]
 
