@@ -3,7 +3,7 @@ import ctypes.wintypes
 import sys
 import os
 
-def inject_dll(target_process_name, dll_path):
+def inject_dll(pid, dll_path):
     OpenProcess = windll.kernel32.OpenProcess
     OpenProcess.restype  = ctypes.wintypes.HANDLE
     OpenProcess.argtypes = ( ctypes.wintypes.DWORD, ctypes.wintypes.BOOL, ctypes.wintypes.DWORD )
@@ -28,7 +28,7 @@ def inject_dll(target_process_name, dll_path):
     GetProcAddress.restype  = ctypes.c_void_p
     GetProcAddress.argtypes = [ ctypes.wintypes.HMODULE, ctypes.wintypes.LPCSTR ] 
 
-    target_pid = int( target_process_name )
+    target_pid = int( pid )
 
     PROCESS_ALL_ACCESS = 0x1F0FFF
     target_process_handle = OpenProcess( PROCESS_ALL_ACCESS, False, target_pid )
@@ -83,11 +83,11 @@ if __name__ == "__main__":
         print("Usage: python dll_injector.py <target_process_name> <dll_path>")
         sys.exit()
 
-    target_process_name = sys.argv[1]
+    pid = sys.argv[1]
     dll_path = sys.argv[2]
 
     if not os.path.exists(dll_path):
         print(f"Error: DLL file '{dll_path}' does not exist.")
         sys.exit()
 
-    inject_dll(target_process_name, dll_path)
+    inject_dll(pid, dll_path)
