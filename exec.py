@@ -2,6 +2,8 @@ from ctypes import *
 import ctypes.wintypes
 import sys
 import os
+import psutil
+import time
 
 def inject_dll(pid, dll_path):
     OpenProcess = windll.kernel32.OpenProcess
@@ -67,7 +69,7 @@ def inject_dll(pid, dll_path):
         print("[+] LoadLibraryA Address")
     else:
         print("[X] LoadLibraryA Address FAILED")
-    
+
 
     if CreateRemoteThread(target_process_handle, None, 0, loadlibrary_address, remote_memory_address, 0, None) == 0:
         print("[X] Failed to create remote thread in the target process.")
@@ -77,10 +79,22 @@ def inject_dll(pid, dll_path):
 
     print(f"[*] Successfully injected '{dll_path}' into '{pid}'")
     return True
+
+def find_pid( target ):
+    print( f"[*] Find {target} FROM PROCESS..." )
+    while True:
+        time.sleep(1)
+        process = psutil.process_iter()
+        for p in process:
+            if p.name() == target:
+                print( f"[*] {target} RUNNING: {p.pid}" )
+                return p.pid
     
+
 if __name__ == "__main__":
-    pid = sys.argv[1]
-    dll_path = sys.argv[2]
+    target = sys.argv[1]
+    pid = find_pid( target )
+    dll_path = "[DLL_PATH]" + sys.argv[2]
 
     if not os.path.exists(dll_path):
         print(f"Error: DLL file '{dll_path}' does not exist.")
